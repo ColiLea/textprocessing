@@ -32,7 +32,7 @@ func (text *Text) Length() (int) {
 	return len(*text)
 }
 
-func (text Text) Less(length, m, n int) (bool) {
+func (text Text) LessSuffix(m, n int) (bool) {
         for{
                 switch {
                         case text[m]<text[n] :
@@ -42,9 +42,9 @@ func (text Text) Less(length, m, n int) (bool) {
                         case text[m]==text[n] :
                                 m++
                                 n++
-                                if n == length {
+                                if n == text.Length() {
                                         return false
-                                } else if m == length {
+                                } else if m == text.Length() {
                                         return true
                                 }
                 }

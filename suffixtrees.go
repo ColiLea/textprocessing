@@ -3,21 +3,23 @@ package textprocessing
 import "strings"
 import "sort"
 
-type SuffixArrayInterface interface {
-	Less()
+type SuffixSortable interface {
+	LessSuffix(int, int) bool
+	Length() int
+	SuffixString(int) string
 }
 
 type SuffixArray struct{
         i []int
-        r *Text
+        r SuffixSortable
         lcp []int
 }
 
-func NewSuffixArray(str *Text) (suffixArray *SuffixArray) {
+func NewSuffixArray(str SuffixSortable) (suffixArray *SuffixArray) {
         suffixArray = new(SuffixArray)
         suffixArray.r=str
         suffixArray.i = make([]int, str.Length())
-        suffixArray.lcp = make([]int, str.Length())
+//        suffixArray.lcp = make([]int, str.Length())
         for idx := range suffixArray.i {
                 suffixArray.i[idx] = idx
         }
@@ -30,7 +32,7 @@ func (suffixArray *SuffixArray) Len() (int) {
 }
 
 func (suffixArray *SuffixArray) Less(m, n int) (bool) {
-        return suffixArray.r.Less(len(suffixArray.i),suffixArray.i[m],suffixArray.i[n])
+        return suffixArray.r.LessSuffix(suffixArray.i[m],suffixArray.i[n])
 }
 
 func (suffixArray *SuffixArray) Swap(m, n int) {
