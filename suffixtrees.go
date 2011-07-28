@@ -2,27 +2,26 @@ package textprocessing
 
 import "strings"
 import "sort"
-import "fmt"
 
-type SuffixArrayInterfact interface {
+type SuffixArrayInterface interface {
 	Less()
 }
 
 type SuffixArray struct{
         i []int
         r *Text
+        lcp []int
 }
 
 func NewSuffixArray(str *Text) (suffixArray *SuffixArray) {
         suffixArray = new(SuffixArray)
         suffixArray.r=str
         suffixArray.i = make([]int, str.Length())
+        suffixArray.lcp = make([]int, str.Length())
         for idx := range suffixArray.i {
                 suffixArray.i[idx] = idx
         }
         sort.Sort(suffixArray)
-        fmt.Println(suffixArray.i)
-        fmt.Println(suffixArray.r)
         return
 }
 
@@ -38,18 +37,12 @@ func (suffixArray *SuffixArray) Swap(m, n int) {
         suffixArray.i[m], suffixArray.i[n] = suffixArray.i[n], suffixArray.i[m]
 }
 
-// func (suffixArray *SuffixArray) SuffixOfLength(length int) (string) {
-// 	return strings.Join(*suffixArray.r[suffixArray.r.Length()-length:], " ")
-// }
-
 func (suffixArray *SuffixArray) String() (string){
-	suffixes := strings.Split(suffixArray.r.SuffixString(), "\n", -1)
-	array := make([]string, len(suffixes))
-        for idx,val := range suffixArray.i {
-		array[idx] = suffixes[val]
+        array := make([]string, len(suffixArray.i))
+        for idx, element := range suffixArray.i {
+                array[idx] = suffixArray.r.SuffixString(len(suffixArray.i)-element)
         }
-        sorted := strings.Join(array, "\n")
-        return string(sorted)
+        return strings.Join(array, "\n")
 }
 
 // func (suffixArray *SuffixArray) Less(m, n int) (bool) {
@@ -72,4 +65,20 @@ func (suffixArray *SuffixArray) String() (string){
 //                 }
 //         }
 //         panic("unreachable")
+// }
+
+// func (suffixArray *SuffixArray) LCP() (lcp []int) {
+// 	lcp[0] = 0
+//         for idx,val := range suffixArray.i {
+// 		if *suffixArray.r[suffixArray.i[idx+1]:].Length() <= *suffixArray.r[suffixArray.i[idx]:].Length() {
+// 			shortestSeq := *suffixArray.r[suffixArray.i[idx+1]:]
+// 		} else {
+// 			shortestSeq := *suffixArray.r[suffixArray.i[idx]:]
+// 		}
+// 		for index, position := range  shortestSeq {
+// 			if *suffixArray.r[suffixArray.i[val]][position] == *suffixArray.r[suffixArray.i[val-1]][position] {
+// 					lcp[idx+1]++
+// 			}
+// 		}
+// 	}
 // }
