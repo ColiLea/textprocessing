@@ -5,6 +5,7 @@ import "sort"
 
 type SuffixSortable interface {
 	LessSuffix(int, int) bool
+	Less(int, int) bool
 	Length() int
 	SuffixString(int) string
 }
@@ -37,7 +38,7 @@ func (suffixArray *SuffixArray) Swap(m, n int) {
         suffixArray.i[m], suffixArray.i[n] = suffixArray.i[n], suffixArray.i[m]
 }
 
-func (suffixArray *SuffixArray) Lcp(text *Text) (height []int){
+func (suffixArray *SuffixArray) Lcp() (height []int){
 	rank := make([]int, len(suffixArray.i))
 	height = make([]int, len(suffixArray.i))
 	for idx, _ := range suffixArray.i {
@@ -47,7 +48,7 @@ func (suffixArray *SuffixArray) Lcp(text *Text) (height []int){
 	for i, _ := range rank {
 		if rank[i] > 0 {
 			k := suffixArray.i[rank[i]-1]
-			for i+h < len(*text) && k+h < len(*text) && (*text)[i+h] == (*text)[k+h] {
+			for i+h < suffixArray.r.Length() && k+h < suffixArray.r.Length() && !suffixArray.r.Less(k+h, i+h) {
 				h++
 			}
 			height[rank[i]] = h
@@ -58,6 +59,7 @@ func (suffixArray *SuffixArray) Lcp(text *Text) (height []int){
 	}
 	return height
 }
+
 
 func (suffixArray *SuffixArray) String() (string){
         array := make([]string, len(suffixArray.i))

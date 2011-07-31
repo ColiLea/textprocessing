@@ -52,16 +52,14 @@ func (text Text) LessSuffix(m, n int) (bool) {
         panic("unreachable")
 }
 
+func (text Text) Less(m, n int) (bool) {
+	return text[m] < text[n]
+}
 
- func (text *Text) SuffixString(length int) (string) {
+func (text *Text) SuffixString(length int) (string) {
 	suffix := make([]string, length)
 	for index,word := range (*text)[text.Length()-length:] {
 		suffix[index] = string(word)
 	}
   	return strings.Join(suffix, " ")
 }
-
-
-// func (suffixArray *SuffixArray) SuffixOfLength(length int) (string) {
-// 	return strings.Join(*suffixArray.r[suffixArray.r.Length()-length:], " ")
-// }
