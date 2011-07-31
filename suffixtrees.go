@@ -4,7 +4,6 @@ import "strings"
 import "sort"
 
 type SuffixSortable interface {
-	LessSuffix(int, int) bool
 	Less(int, int) bool
 	Length() int
 	SuffixString(int) string
@@ -30,9 +29,6 @@ func (suffixArray *SuffixArray) Len() (int) {
         return len(suffixArray.i)
 }
 
-func (suffixArray *SuffixArray) Less(m, n int) (bool) {
-        return suffixArray.r.LessSuffix(suffixArray.i[m],suffixArray.i[n])
-}
 
 func (suffixArray *SuffixArray) Swap(m, n int) {
         suffixArray.i[m], suffixArray.i[n] = suffixArray.i[n], suffixArray.i[m]

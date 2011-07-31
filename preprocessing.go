@@ -32,14 +32,16 @@ func (text *Text) Length() (int) {
 	return len(*text)
 }
 
-func (text Text) LessSuffix(m, n int) (bool) {
+func (suffixArray *SuffixArray) Less(m, n int) (bool) {
+	text := suffixArray.r
+	m,n=suffixArray.i[m],suffixArray.i[n]
         for{
                 switch {
-                        case text[m]<text[n] :
+                        case text.Less(m,n):
                                 return true
-                        case text[m]>text[n] :
+                        case text.Less(n,m) :
                                 return false
-                        case text[m]==text[n] :
+                        default :
                                 m++
                                 n++
                                 if n == text.Length() {
