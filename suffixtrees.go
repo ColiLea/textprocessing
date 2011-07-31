@@ -12,14 +12,12 @@ type SuffixSortable interface {
 type SuffixArray struct{
         i []int
         r SuffixSortable
-        lcp []int
 }
 
 func NewSuffixArray(str SuffixSortable) (suffixArray *SuffixArray) {
         suffixArray = new(SuffixArray)
         suffixArray.r=str
         suffixArray.i = make([]int, str.Length())
-//        suffixArray.lcp = make([]int, str.Length())
         for idx := range suffixArray.i {
                 suffixArray.i[idx] = idx
         }
@@ -39,6 +37,28 @@ func (suffixArray *SuffixArray) Swap(m, n int) {
         suffixArray.i[m], suffixArray.i[n] = suffixArray.i[n], suffixArray.i[m]
 }
 
+func (suffixArray *SuffixArray) Lcp(text *Text) (height []int){
+	rank := make([]int, len(suffixArray.i))
+	height = make([]int, len(suffixArray.i))
+	for idx, _ := range suffixArray.i {
+		rank[suffixArray.i[idx]] = idx
+	}
+	h := 0
+	for i, _ := range rank {
+		if rank[i] > 0 {
+			k := suffixArray.i[rank[i]-1]
+			for i+h < len(*text) && k+h < len(*text) && (*text)[i+h] == (*text)[k+h] {
+				h++
+			}
+			height[rank[i]] = h
+			if h > 0 {
+				h--
+			}
+		}
+	}
+	return height
+}
+
 func (suffixArray *SuffixArray) String() (string){
         array := make([]string, len(suffixArray.i))
         for idx, element := range suffixArray.i {
@@ -46,41 +66,3 @@ func (suffixArray *SuffixArray) String() (string){
         }
         return strings.Join(array, "\n")
 }
-
-// func (suffixArray *SuffixArray) Less(m, n int) (bool) {
-//         midx:=suffixArray.i[m]
-//         nidx:=suffixArray.i[n]
-//         for{
-//                 switch {
-//                         case suffixArray.s[midx]<suffixArray.s[nidx] :
-//                                 return true
-//                         case suffixArray.s[midx]>suffixArray.s[nidx] :
-//                                 return false
-//                         case suffixArray.s[midx]==suffixArray.s[nidx] :
-//                                 midx++
-//                                 nidx++
-//                                 if nidx == len(suffixArray.i) {
-//                                         return false
-//                                 } else if midx == len(suffixArray.i) {
-//                                         return true
-//                                 }
-//                 }
-//         }
-//         panic("unreachable")
-// }
-
-// func (suffixArray *SuffixArray) LCP() (lcp []int) {
-// 	lcp[0] = 0
-//         for idx,val := range suffixArray.i {
-// 		if *suffixArray.r[suffixArray.i[idx+1]:].Length() <= *suffixArray.r[suffixArray.i[idx]:].Length() {
-// 			shortestSeq := *suffixArray.r[suffixArray.i[idx+1]:]
-// 		} else {
-// 			shortestSeq := *suffixArray.r[suffixArray.i[idx]:]
-// 		}
-// 		for index, position := range  shortestSeq {
-// 			if *suffixArray.r[suffixArray.i[val]][position] == *suffixArray.r[suffixArray.i[val-1]][position] {
-// 					lcp[idx+1]++
-// 			}
-// 		}
-// 	}
-// }
