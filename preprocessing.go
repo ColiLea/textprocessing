@@ -17,9 +17,11 @@ func NewTextFile(filename string) (text *Text) {
 }
 
 func NewText(str string) (text *Text) {
-    const punct = "[?!.,;:^/\\<>//(//)\"\t\n]*"
-    reStrip := regexp.MustCompile(punct+`[ \t\n]+`+punct)
-    textStringSlice := strings.Split(reStrip.ReplaceAllString(str, " "), " ", -1)
+    const punct = "[?!.,;:^/\\<>\\(\\)\"]*"
+    reStrip := regexp.MustCompile(punct+"([ \t\n]+"+punct+")+")
+    str = reStrip.ReplaceAllString(str, " ")
+    str = strings.Trim(str, " \n\t?!.,;:^/\\<>()\"")
+    textStringSlice := strings.Split(str, " ", -1)
     slice := make(Text,len(textStringSlice))
     text = &slice
     for idx,word := range textStringSlice {
