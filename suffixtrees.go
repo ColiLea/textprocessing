@@ -26,7 +26,7 @@ func NewSuffixArray(str SuffixSortable) (suffixArray *SuffixArray) {
         return
 }
 
-func (suffixArray *SuffixArray) Len() (int) {
+func (suffixArray *SuffixArray) Len() (length int) {
         return len(suffixArray.i)
 }
 
@@ -35,9 +35,9 @@ func (suffixArray *SuffixArray) Swap(m, n int) {
         suffixArray.i[m], suffixArray.i[n] = suffixArray.i[n], suffixArray.i[m]
 }
 
-func (suffixArray *SuffixArray) Lcp() (height []int){
+func (suffixArray *SuffixArray) Lcp() (lcps []int){
 	rank := make([]int, len(suffixArray.i))
-	height = make([]int, len(suffixArray.i))
+	lcps = make([]int, len(suffixArray.i))
 	for idx, _ := range suffixArray.i {
 		rank[suffixArray.i[idx]] = idx
 	}
@@ -48,13 +48,34 @@ func (suffixArray *SuffixArray) Lcp() (height []int){
 			for i+h < suffixArray.r.Length() && k+h < suffixArray.r.Length() && !suffixArray.r.Less(k+h, i+h) {
 				h++
 			}
-			height[rank[i]] = h
+			lcps[rank[i]] = h
 			if h > 0 {
 				h--
 			}
 		}
 	}
-	return height
+	return
+}
+
+func (suffixArray *SuffixArray) GetTokenIndex(suffixIndex int) (tokenIndex int) {
+	return suffixArray.i[suffixIndex]
+}
+
+
+func (suffixArray *SuffixArray) GetSliceTokenIndices(startIdx, length int) (tokenIndices []int){
+	for ii:=startIdx; ii<startIdx+length; ii++ {
+		tokenIndices = append(tokenIndices, suffixArray.i[ii])
+	}
+	return
+}
+
+
+func (suffixArray *SuffixArray) GetSlicesTokenIndices(suffixIndices, lengths []int) (tokenIndices [][]int) {
+	tokenIndices = make([][]int, len(suffixIndices))
+	for idx, _ := range suffixIndices {
+		tokenIndices[idx] = suffixArray.GetSliceTokenIndices(suffixIndices[idx], lengths[idx])
+	}
+	return
 }
 
 
