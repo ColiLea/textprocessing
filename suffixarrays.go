@@ -58,26 +58,19 @@ func (suffixArray *SuffixArray) Lcp() (lcps []int){
 }
 
 func (suffixArray *SuffixArray) GetTokenIndex(suffixIndex int) (tokenIndex int) {
+	// Get startposition of first occurrence substring in text
 	return suffixArray.i[suffixIndex]
 }
 
 
-func (suffixArray *SuffixArray) GetSliceTokenIndices(startIdx, length int) (tokenIndices []int){
+func (suffixArray *SuffixArray) GetTokenIndices(startIdx, length int) (tokenIndices []int){
+	// Get startposition of all occurrences of substring type in text
+	// Return token indices of the respective slice of the suffix array
 	for ii:=startIdx; ii<startIdx+length; ii++ {
 		tokenIndices = append(tokenIndices, suffixArray.i[ii])
 	}
 	return
 }
-
-
-func (suffixArray *SuffixArray) GetSlicesTokenIndices(suffixIndices, lengths []int) (tokenIndices [][]int) {
-	tokenIndices = make([][]int, len(suffixIndices))
-	for idx, _ := range suffixIndices {
-		tokenIndices[idx] = suffixArray.GetSliceTokenIndices(suffixIndices[idx], lengths[idx])
-	}
-	return
-}
-
 
 func (suffixArray *SuffixArray) String() (string){
         array := make([]string, len(suffixArray.i))

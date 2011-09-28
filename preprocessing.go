@@ -23,7 +23,7 @@ func NewText(str string) (text *Text) {
 	str = strings.Trim(str, " \n\t?!.,;:^/\\<>()\"")
 	var textStringSlice []string
 	if str != "" {
-		textStringSlice = strings.Split(str, " ", -1)
+		textStringSlice = strings.Split(str, " ")
 	}
 	slice := make(Text,len(textStringSlice))
 	text = &slice
